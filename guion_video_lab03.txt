@@ -1,0 +1,37 @@
+GUION VIDEO LAB 03 - MENOS DE 1 MINUTO
+========================================
+
+[MOSTRAR: Colab abierto con el notebook]
+
+"Buenas, soy Sebastian Arduz. Para el laboratorio 3 use el dataset
+Communities and Crime Unnormalized de UCI, que tiene datos
+socioeconomicos del censo de EEUU combinados con estadisticas
+de crimenes del FBI.
+
+Despues de limpiar datos faltantes, quede con 2,214 filas
+y 100 features numericas. El objetivo es predecir la tasa
+de crimenes violentos por cada 100 mil habitantes.
+
+[MOSTRAR: Codigo de preprocesamiento corriendo]
+
+Entrene 3 modelos. Primero, regresion lineal multivariable
+con gradiente descendente, usando las 100 features normalizadas
+con z-score, alpha 0.01 y 10 mil iteraciones.
+
+[MOSTRAR: Grafica de costo bajando del modelo 1]
+
+Segundo, regresion polinomica. Tome las 20 features mas
+correlacionadas y agregue sus valores al cuadrado, dando
+40 features. Esto captura relaciones no lineales.
+
+[MOSTRAR: Grafica de costo del modelo 2]
+
+Tercero, la ecuacion normal, que calcula theta directamente
+sin iterar.
+
+[MOSTRAR: Tabla de comparacion de errores + grafica real vs predicho]
+
+Al comparar los tres modelos, se puede ver cual tiene menor
+error promedio en las predicciones de prueba.
+
+Eso es todo, gracias."

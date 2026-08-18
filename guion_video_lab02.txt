@@ -1,0 +1,39 @@
+GUION VIDEO LAB 02 - MENOS DE 1 MINUTO
+========================================
+
+[MOSTRAR: Dataset en pantalla o Colab abierto]
+
+"Buenas, soy Sebastian Arduz. Para el laboratorio 2 de regresion
+lineal multiple, utilice el dataset Buzz in Social Media del
+repositorio UCI, subset TomsHardware.
+
+El dataset tiene 28,179 filas y 96 columnas numericas.
+El objetivo es predecir la popularidad o buzz de un tema
+en redes sociales.
+
+[MOSTRAR: Codigo corriendo en Colab]
+
+Las 96 features miden cosas como numero de discusiones creadas,
+cantidad de autores, nivel de atencion, y visualizaciones,
+medidas en 8 momentos de tiempo diferentes.
+
+Primero cargo los datos con Pandas. Luego normalizo las features
+con z-score para que esten en la misma escala.
+
+Despues aplico gradiente descendente con alpha 0.01 y 10,000
+iteraciones. La funcion de costo se redujo un 90 por ciento.
+
+[MOSTRAR: Grafica de costo vs iteraciones bajando]
+
+Tambien compare con la ecuacion normal. El gradiente descendente
+obtuvo un error promedio de 583, mejor que la ecuacion normal
+que dio 624.
+
+[MOSTRAR: Grafica real vs predicho]
+
+Por ultimo, probe diferentes learning rates para ver cual
+converge mejor.
+
+[MOSTRAR: Grafica de comparacion de alphas]
+
+Eso es todo, gracias."
