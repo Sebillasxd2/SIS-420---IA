@@ -1,0 +1,10 @@
+# Datasets: los cuadernillos los descargan solos de sus fuentes originales
+auto-mpg.csv
+credit_card_default.csv
+kmnist-*.npz
+cc.zip
+*.xls
+
+# Artefactos generados al entrenar
+pesos/
+checkpoints_*/
