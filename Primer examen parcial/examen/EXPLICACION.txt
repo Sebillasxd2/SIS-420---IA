@@ -1,0 +1,60 @@
+PRIMER EXAMEN PARCIAL - SIS 420 INTELIGENCIA ARTIFICIAL I
+Estudiante: Arduz Espada Juan Sebastian
+Dataset: Speaker Recognition Dataset (Kaggle)
+https://www.kaggle.com/datasets/kongaevans/speaker-recognition-dataset
+
+
+1. QUE HICE
+
+Arme un modelo neuronal que clasifica quien esta hablando en un audio de 1 segundo. Son 5 personas: Benjamin Netanyahu, Jens Stoltenberg, Julia Gillard, Margaret Thatcher y Nelson Mandela. Todo esta en el cuadernillo de Google Colab, el dataset se descarga solo con kagglehub.
+
+
+2. EL DATASET
+
+- 1500 audios por persona (7500 en total), numerados del 0 al 1499. Todos duran 1 segundo, estan a 16000 Hz y son mono, asi que no hubo que recortar ni convertir nada.
+- Julia Gillard tenia un archivo extra (new.wav) que no sigue la numeracion. Lo saque para que las 5 clases queden con 1500 audios, o sea balanceadas.
+- El dataset tambien trae 6 grabaciones de ruido: aplausos, lavar platos, un gato, un grifo, una bicicleta y ruido rosa.
+
+
+3. PREPROCESADO
+
+- Caracteristicas: un audio de 1 segundo son 16000 numeros. En vez de usar eso saque los MFCC, que son 40 numeros por cada pedacito del audio y describen el timbre de la voz. El audio queda en 32 pedacitos, entonces a cada coeficiente le saque el promedio y la desviacion estandar. Cada audio queda como 80 numeros.
+- Audio con ruido: a cada audio le sume un pedazo al azar de uno de los 6 ruidos, con un volumen de la mitad a 1.5 veces el de la voz. Lo hice porque con el audio limpio el problema salio demasiado facil (ver punto 4) y en la vida real casi siempre hay ruido.
+- Division: 70% entrenamiento, 15% validacion y 15% prueba. La hice secuencial por persona (audios 0-1049 entrenamiento, 1050-1274 validacion y 1275-1499 prueba) porque los audios son pedazos seguidos de los mismos discursos. Si los mezclaba al azar, un audio de prueba podia estar justo al lado de uno de entrenamiento y el resultado iba a salir mejor de lo que es.
+- Normalice con z-score usando la media y la desviacion solo del entrenamiento.
+
+
+4. MODELOS Y ENTRENAMIENTO
+
+Use PyTorch como en el lab 06: una clase Dataset con su DataLoader (lotes de 64), una clase RedNeuronal que hereda de nn.Module, CrossEntropyLoss como costo, Adam o SGD como optimizador y un checkpoint que guarda los pesos cada vez que mejora la exactitud en validacion.
+
+- Con audio limpio: el modelo lineal de los labs (un solo nn.Linear con softmax) ya saca 99.5% en prueba y la red 99.8%. Con audio limpio no hace falta una red neuronal, por eso segui con el audio con ruido.
+- Con ruido, modelo lineal: 85.8% en prueba.
+- Con ruido, red neuronal: probe 12 configuraciones y elegi la de mejor exactitud en validacion. Cambie la cantidad de capas y neuronas (1 capa de 128 o 256, 2 capas de 128-64 o 256-128), el optimizador y la tasa de aprendizaje (SGD 0.01 y 0.1, Adam 0.0001, 0.001 y 0.01) y el dropout (0, 0.2 y 0.4).
+- Configuracion elegida: 1 capa oculta de 128 neuronas con ReLU, dropout de 0.2, Adam con lr 0.001. Mas capas no mejoraron. SGD con 0.01 y Adam con 0.0001 aprendieron muy lento.
+- Entrene hasta 80 epocas. Desde la epoca 20 o 30 el costo de validacion ya no bajaba y al final subia un poco mientras el de entrenamiento seguia bajando (sobreajuste). Por eso me quede con los pesos de la mejor epoca en validacion, la 56.
+
+
+5. RESULTADOS EN PRUEBA
+
+- Red neuronal: 94.1% de exactitud, F1 promedio 0.94.
+- Modelo lineal: 85.8% de exactitud, F1 promedio 0.86.
+- La red es mejor con las 5 personas y con los 6 tipos de ruido. Donde mas se equivoca es confundiendo a Netanyahu con Stoltenberg. Nelson Mandela es el mas facil (F1 0.98).
+- El ruido que menos molesta son los aplausos (98.4%) y los que mas molestan son lavar platos y la bicicleta (cerca de 92%).
+- Con los mismos audios de prueba pero sin ruido la red saca 94.7%, porque la entrene solo con audio con ruido.
+- Comprobe el checkpoint: una red nueva sin entrenar saca 26.9% y al cargarle los pesos guardados saca 94.1%, con las mismas probabilidades que la red original.
+
+
+6. CONCLUSIONES
+
+- Con audio limpio reconocer a estas 5 personas es facil, hasta el modelo lineal llega a 99.5%.
+- Con ruido el modelo lineal baja a 85.8% y la red neuronal llega a 94.1%. La capa oculta con ReLU le permite separar clases que un modelo lineal no puede.
+- Lo que mas ayudo fue Adam con una buena tasa de aprendizaje y un poco de dropout. Mas capas no mejoraron.
+- La validacion sirvio para elegir la configuracion y la mejor epoca sin tocar los datos de prueba.
+- Para mejorar se podria entrenar con mas tipos de ruido o juntar audios limpios y con ruido.
+
+
+7. ARCHIVOS
+
+- Primer_Parcial_SIS420_Arduz_Speaker_Recognition.ipynb: cuadernillo de Google Colab (codigo sin comentarios, las explicaciones estan en las celdas de texto). Tarda unos 5 minutos en ejecutarse completo.
+- Repositorio: https://github.com/Sebillasxd2/SIS-420---IA
