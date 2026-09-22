@@ -8,3 +8,9 @@ cc.zip
 # Artefactos generados al entrenar
 pesos/
 checkpoints_*/
+
+# Listas del docente y del grupo (tienen nombres de estudiantes)
+*.xlsx
+# Herramientas locales
+_fuente/
+DEFENSA*.md
